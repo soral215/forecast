@@ -13,5 +13,3 @@ export const router = createBrowserRouter([
     element: <PlaceDetailPage />,
   },
 ])
-
-
