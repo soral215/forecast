@@ -9,6 +9,7 @@ import {
 } from '../../entities/weather'
 import { SearchPlace } from '../../features/search-place'
 import { Card } from '../../shared/ui'
+import { CurrentLocationWeather } from '../../widgets/current-location-weather'
 
 export function HomePage() {
   const [selected, setSelected] = useState<PlaceCandidate | null>(null)
@@ -32,6 +33,8 @@ export function HomePage() {
             Go detail
           </Link>
         </header>
+
+        <CurrentLocationWeather />
 
         <Card>
           <p className="text-sm text-slate-300">
