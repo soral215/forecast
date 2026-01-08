@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+import { SearchPlace } from '../../features/search-place'
 import { Card } from '../../shared/ui'
 
 export function HomePage() {
@@ -20,6 +21,10 @@ export function HomePage() {
           <p className="text-sm text-slate-300">
             Router/Query Provider 적용 확인용 임시 페이지입니다.
           </p>
+
+          <div className="mt-6">
+            <SearchPlace onSelect={(p) => console.log('selected', p)} />
+          </div>
         </Card>
       </div>
     </div>
