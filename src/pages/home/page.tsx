@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 
+import { Card } from '../../shared/ui'
+
 export function HomePage() {
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
@@ -14,11 +16,11 @@ export function HomePage() {
           </Link>
         </header>
 
-        <main className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <Card>
           <p className="text-sm text-slate-300">
             Router/Query Provider 적용 확인용 임시 페이지입니다.
           </p>
-        </main>
+        </Card>
       </div>
     </div>
   )

@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 
+import { Card } from '../../shared/ui'
+
 export function PlaceDetailPage() {
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
@@ -14,11 +16,11 @@ export function PlaceDetailPage() {
           </Link>
         </header>
 
-        <main className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <Card>
           <p className="text-sm text-slate-300">
             상세 페이지(추후 선택된 장소의 전체 날씨 정보를 표시).
           </p>
-        </main>
+        </Card>
       </div>
     </div>
   )
