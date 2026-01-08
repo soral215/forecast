@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { getTodayMinMax, useForecast } from '../../entities/weather'
 import { Button, Card, Spinner } from '../../shared/ui'
 import { useGeolocation } from '../../shared/lib/use-geolocation'
+import { formatKoreanPlaceName, useReverseGeocode } from '../../entities/place'
 
 export function CurrentLocationWeather() {
   const geoOptions = useMemo(
@@ -10,6 +11,13 @@ export function CurrentLocationWeather() {
     [],
   )
   const geo = useGeolocation(geoOptions)
+  const placeNameQuery = useReverseGeocode(
+    geo.coords?.latitude ?? null,
+    geo.coords?.longitude ?? null,
+  )
+  const placeName = placeNameQuery.data
+    ? formatKoreanPlaceName(placeNameQuery.data)
+    : undefined
   const forecast = useForecast(
     geo.coords?.latitude ?? null,
     geo.coords?.longitude ?? null,
@@ -22,9 +30,13 @@ export function CurrentLocationWeather() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-base font-semibold tracking-tight">현재 위치</h2>
-          <p className="mt-1 text-sm text-slate-400">
-            브라우저 위치 권한을 허용하면 현재 위치의 날씨를 표시합니다.
-          </p>
+          {placeName ? (
+            <p className="mt-1 text-sm text-slate-300">{placeName}</p>
+          ) : (
+            <p className="mt-1 text-sm text-slate-400">
+              브라우저 위치 권한을 허용하면 현재 위치의 날씨를 표시합니다.
+            </p>
+          )}
         </div>
         <Button variant="secondary" size="sm" onClick={geo.request}>
           다시 시도
