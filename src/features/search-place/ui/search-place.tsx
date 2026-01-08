@@ -1,12 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import {
-  buildSearchIndex,
+  loadSearchIndex,
   normalizeDistrictText,
   type PlaceCandidate,
 } from '../../../entities/place'
 import { useDebounce } from '../../../shared/lib/use-debounce'
-import { Card, Input } from '../../../shared/ui'
+import { Card, Input, Spinner } from '../../../shared/ui'
 
 type Props = {
   onSelect: (place: PlaceCandidate) => void
@@ -24,10 +24,27 @@ export function SearchPlace({ onSelect }: Props) {
   const debounced = useDebounce(query, 200)
   const queryNorm = useMemo(() => normalizeDistrictText(debounced), [debounced])
 
-  const index = useMemo(() => buildSearchIndex(), [])
+  const [index, setIndex] = useState<PlaceCandidate[] | null>(null)
+  const [indexError, setIndexError] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+    loadSearchIndex()
+      .then((data) => {
+        if (!isMounted) return
+        setIndex(data)
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setIndexError(true)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const results = useMemo(() => {
-    if (!queryNorm) return []
+    if (!queryNorm || !index) return []
 
     return index
       .map((c) => ({ c, score: scoreCandidate(c, queryNorm) }))
@@ -47,6 +64,19 @@ export function SearchPlace({ onSelect }: Props) {
 
       {queryNorm && (
         <Card className="p-2">
+          {indexError && (
+            <p className="px-2 py-2 text-sm text-rose-300">
+              장소 목록을 불러오지 못했습니다.
+            </p>
+          )}
+
+          {!index && !indexError && (
+            <div className="flex items-center gap-2 px-2 py-2 text-sm text-slate-300">
+              <Spinner size="sm" />
+              장소 목록을 불러오는 중...
+            </div>
+          )}
+
           {results.length === 0 ? (
             <p className="px-2 py-2 text-sm text-slate-400">
               매칭되는 장소가 없습니다.
@@ -57,7 +87,9 @@ export function SearchPlace({ onSelect }: Props) {
                 <li key={p.full}>
                   <button
                     className="w-full rounded-xl px-3 py-2 text-left text-sm text-slate-100 hover:bg-slate-800/60"
-                    onClick={() => onSelect(p)}
+                    onClick={() => {
+                      onSelect(p)
+                    }}
                     type="button"
                   >
                     {p.full}

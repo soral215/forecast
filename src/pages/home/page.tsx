@@ -47,13 +47,12 @@ export function HomePage() {
     <div className="min-h-full bg-slate-950 text-slate-50">
       <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
         <header className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold tracking-tight">Home</h1>
-          <Link
-            className="rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
-            to="/place"
-          >
-            Go detail
-          </Link>
+          <div>
+            <h1 className="text-xl font-semibold tracking-tight">날씨</h1>
+            <p className="mt-1 text-sm text-slate-400">
+              현재 위치 또는 원하는 장소를 검색해 확인하세요.
+            </p>
+          </div>
         </header>
 
         <CurrentLocationWeather />
@@ -80,11 +79,12 @@ export function HomePage() {
         </Card>
 
         <Card>
-          <p className="text-sm text-slate-300">
-            Router/Query Provider 적용 확인용 임시 페이지입니다.
+          <h2 className="text-base font-semibold tracking-tight">장소 검색</h2>
+          <p className="mt-1 text-sm text-slate-400">
+            검색 결과에서 장소를 선택하면 상세 날씨를 표시합니다.
           </p>
 
-          <div className="mt-6">
+          <div className="mt-4">
             <SearchPlace onSelect={(p) => setSelected(p)} />
           </div>
 
@@ -111,9 +111,20 @@ export function HomePage() {
               )}
 
               {geocode.isSuccess && geocode.data.length > 0 && (
-                <p className="mt-2 text-sm text-slate-300">
-                  좌표: {geocode.data[0].latitude}, {geocode.data[0].longitude}
-                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <p className="text-sm text-slate-300">
+                    좌표: {geocode.data[0].latitude},{' '}
+                    {geocode.data[0].longitude}
+                  </p>
+                  <Link
+                    className="text-sm text-indigo-300 hover:text-indigo-200"
+                    to={`/place?lat=${geocode.data[0].latitude}&lon=${geocode.data[0].longitude}&name=${encodeURIComponent(
+                      selected.full,
+                    )}`}
+                  >
+                    상세 보기
+                  </Link>
+                </div>
               )}
 
               {selectedFav && (
