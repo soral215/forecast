@@ -2,12 +2,23 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { type PlaceCandidate, useGeocodePlace } from '../../entities/place'
+import {
+  getNext24hHourlyTemps,
+  getTodayMinMax,
+  useForecast,
+} from '../../entities/weather'
 import { SearchPlace } from '../../features/search-place'
 import { Card } from '../../shared/ui'
 
 export function HomePage() {
   const [selected, setSelected] = useState<PlaceCandidate | null>(null)
   const geocode = useGeocodePlace(selected?.full ?? null)
+  const first = geocode.data?.[0]
+  const forecast = useForecast(
+    first?.latitude ?? null,
+    first?.longitude ?? null,
+  )
+  const todayMinMax = forecast.data ? getTodayMinMax(forecast.data) : null
 
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
@@ -61,6 +72,66 @@ export function HomePage() {
             </div>
           )}
         </Card>
+
+        {forecast.isLoading && (
+          <Card>
+            <p className="text-sm text-slate-400">날씨 정보를 불러오는 중...</p>
+          </Card>
+        )}
+
+        {forecast.isError && (
+          <Card>
+            <p className="text-sm text-rose-300">
+              해당 장소의 정보가 제공되지 않습니다.
+            </p>
+          </Card>
+        )}
+
+        {forecast.isSuccess && (
+          <Card>
+            <h2 className="text-base font-semibold tracking-tight">
+              {selected ? selected.full : '선택된 장소'}
+            </h2>
+
+            <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-200">
+              <div className="rounded-xl bg-slate-950/40 px-3 py-2">
+                현재 기온:{' '}
+                <span className="font-semibold">
+                  {forecast.data.current?.temperature_2m ?? '-'}℃
+                </span>
+              </div>
+
+              {todayMinMax && (
+                <div className="rounded-xl bg-slate-950/40 px-3 py-2">
+                  오늘:{' '}
+                  <span className="font-semibold">{todayMinMax.min}℃</span> /{' '}
+                  <span className="font-semibold">{todayMinMax.max}℃</span>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4">
+              <p className="text-sm text-slate-300">
+                시간대별 기온(다음 24시간)
+              </p>
+              <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {getNext24hHourlyTemps(forecast.data).map((x) => (
+                  <li
+                    key={x.time}
+                    className="rounded-xl border border-slate-800 bg-slate-950/30 px-3 py-2"
+                  >
+                    <p className="text-xs text-slate-400">
+                      {x.time.slice(11, 16)}
+                    </p>
+                    <p className="text-sm font-semibold text-slate-100">
+                      {x.temp}℃
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   )
