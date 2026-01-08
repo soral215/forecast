@@ -1,6 +1,10 @@
 import { useMemo } from 'react'
 
-import { getTodayMinMax, useForecast } from '../../entities/weather'
+import {
+  getNext24hHourlyTemps,
+  getTodayMinMax,
+  useForecast,
+} from '../../entities/weather'
 import { Button, Card, Spinner } from '../../shared/ui'
 import { useGeolocation } from '../../shared/lib/use-geolocation'
 import { formatKoreanPlaceName, useReverseGeocode } from '../../entities/place'
@@ -70,20 +74,41 @@ export function CurrentLocationWeather() {
       )}
 
       {geo.status === 'success' && forecast.isSuccess && (
-        <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-200">
-          <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-            현재 기온:{' '}
-            <span className="font-semibold">
-              {forecast.data.current?.temperature_2m ?? '-'}℃
-            </span>
-          </div>
-          {todayMinMax && (
+        <>
+          <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-200">
             <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-              오늘: <span className="font-semibold">{todayMinMax.min}℃</span> /{' '}
-              <span className="font-semibold">{todayMinMax.max}℃</span>
+              현재 기온:{' '}
+              <span className="font-semibold">
+                {forecast.data.current?.temperature_2m ?? '-'}℃
+              </span>
             </div>
-          )}
-        </div>
+            {todayMinMax && (
+              <div className="rounded-xl bg-slate-950/40 px-3 py-2">
+                오늘: <span className="font-semibold">{todayMinMax.min}℃</span>{' '}
+                / <span className="font-semibold">{todayMinMax.max}℃</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6">
+            <p className="text-sm text-slate-300">시간대별 기온(다음 24시간)</p>
+            <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {getNext24hHourlyTemps(forecast.data).map((x) => (
+                <li
+                  key={x.time}
+                  className="rounded-xl border border-slate-800 bg-slate-950/30 px-3 py-2"
+                >
+                  <p className="text-xs text-slate-400">
+                    {x.time.slice(11, 16)}
+                  </p>
+                  <p className="text-sm font-semibold text-slate-100">
+                    {x.temp}℃
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
     </Card>
   )
