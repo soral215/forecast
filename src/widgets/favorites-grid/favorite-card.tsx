@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { type FavoritePlace } from '../../entities/place'
 import { getTodayMinMax, useForecast } from '../../entities/weather'
-import { Button, Card, Input, Spinner } from '../../shared/ui'
+import { RenameFavoriteInline } from '../../features/rename-favorite'
+import { Button, Card, Spinner } from '../../shared/ui'
 
 type Props = {
   place: FavoritePlace
@@ -17,14 +18,6 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
   const navigate = useNavigate()
 
   const [isEditing, setIsEditing] = useState(false)
-  const [draft, setDraft] = useState(place.alias)
-  const inputRef = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    if (!isEditing) return
-    inputRef.current?.focus()
-    inputRef.current?.select()
-  }, [isEditing])
 
   const goDetail = () => {
     navigate(
@@ -32,12 +25,6 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
         place.alias,
       )}`,
     )
-  }
-
-  const save = () => {
-    const next = draft.trim()
-    onRename(place.id, next.length ? next : place.fullName)
-    setIsEditing(false)
   }
 
   return (
@@ -57,39 +44,15 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {isEditing ? (
-            <div className="flex items-center gap-2">
-              <Input
-                ref={inputRef}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') save()
-                  if (e.key === 'Escape') setIsEditing(false)
-                }}
-                onClick={(e) => e.stopPropagation()}
-                placeholder="별칭 입력"
-              />
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  save()
-                }}
-              >
-                저장
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setIsEditing(false)
-                }}
-              >
-                취소
-              </Button>
-            </div>
+            <RenameFavoriteInline
+              initialValue={place.alias}
+              fallbackValue={place.fullName}
+              onSave={(next) => {
+                onRename(place.id, next)
+                setIsEditing(false)
+              }}
+              onCancel={() => setIsEditing(false)}
+            />
           ) : (
             <>
               <p className="truncate text-sm font-semibold text-slate-50">
@@ -109,7 +72,6 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
               variant="ghost"
               onClick={(e) => {
                 e.stopPropagation()
-                setDraft(place.alias)
                 setIsEditing(true)
               }}
             >

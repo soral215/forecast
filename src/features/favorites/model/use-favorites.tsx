@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { loadFavorites, saveFavorites } from './favorites-storage'
-import { type FavoritePlace } from '../model/favorite-place'
+import {
+  loadFavorites,
+  saveFavorites,
+} from '../../../entities/place/lib/favorites-storage'
+import { type FavoritePlace } from '../../../entities/place/model/favorite-place'
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<FavoritePlace[]>(() =>
@@ -13,7 +16,6 @@ export function useFavorites() {
   }, [favorites])
 
   const ids = useMemo(() => new Set(favorites.map((f) => f.id)), [favorites])
-
   const isFavorite = useCallback((id: string) => ids.has(id), [ids])
 
   const addFavorite = useCallback((place: FavoritePlace) => {
