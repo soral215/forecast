@@ -71,7 +71,11 @@ export function HomePage() {
           </div>
 
           <div className="mt-4">
-            <FavoritesGrid favorites={fav.favorites} />
+            <FavoritesGrid
+              favorites={fav.favorites}
+              onRename={fav.renameFavorite}
+              onRemove={fav.removeFavorite}
+            />
           </div>
         </Card>
 
