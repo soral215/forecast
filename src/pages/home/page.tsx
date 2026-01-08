@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { type PlaceCandidate, useGeocodePlace } from '../../entities/place'
+import {
+  type FavoritePlace,
+  type PlaceCandidate,
+  useFavorites,
+  useGeocodePlace,
+} from '../../entities/place'
 import {
   getNext24hHourlyTemps,
   getTodayMinMax,
   useForecast,
 } from '../../entities/weather'
 import { SearchPlace } from '../../features/search-place'
-import { Card } from '../../shared/ui'
+import { Button, Card } from '../../shared/ui'
 import { CurrentLocationWeather } from '../../widgets/current-location-weather'
+import { FavoritesGrid } from '../../widgets/favorites-grid'
 
 export function HomePage() {
   const [selected, setSelected] = useState<PlaceCandidate | null>(null)
@@ -20,6 +26,22 @@ export function HomePage() {
     first?.longitude ?? null,
   )
   const todayMinMax = forecast.data ? getTodayMinMax(forecast.data) : null
+  const fav = useFavorites()
+
+  const selectedFav: FavoritePlace | null =
+    selected && first
+      ? {
+          id: `${first.latitude},${first.longitude}`,
+          fullName: selected.full,
+          alias: selected.full,
+          lat: first.latitude,
+          lon: first.longitude,
+        }
+      : null
+  const isSelectedFavorite = selectedFav
+    ? fav.isFavorite(selectedFav.id)
+    : false
+  const canAddMore = fav.favorites.length < fav.max
 
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
@@ -35,6 +57,23 @@ export function HomePage() {
         </header>
 
         <CurrentLocationWeather />
+
+        <Card>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold tracking-tight">
+                즐겨찾기
+              </h2>
+              <p className="mt-1 text-sm text-slate-400">
+                최대 {fav.max}개까지 등록할 수 있습니다.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <FavoritesGrid favorites={fav.favorites} />
+          </div>
+        </Card>
 
         <Card>
           <p className="text-sm text-slate-300">
@@ -71,6 +110,27 @@ export function HomePage() {
                 <p className="mt-2 text-sm text-slate-300">
                   좌표: {geocode.data[0].latitude}, {geocode.data[0].longitude}
                 </p>
+              )}
+
+              {selectedFav && (
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant={isSelectedFavorite ? 'secondary' : 'primary'}
+                    onClick={() => {
+                      if (isSelectedFavorite) fav.removeFavorite(selectedFav.id)
+                      else fav.addFavorite(selectedFav)
+                    }}
+                    disabled={!isSelectedFavorite && !canAddMore}
+                  >
+                    {isSelectedFavorite ? '즐겨찾기 삭제' : '즐겨찾기 추가'}
+                  </Button>
+                  {!isSelectedFavorite && !canAddMore && (
+                    <p className="text-sm text-rose-300">
+                      즐겨찾기는 최대 {fav.max}개까지 추가할 수 있습니다.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           )}

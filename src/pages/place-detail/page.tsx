@@ -1,8 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import { Card } from '../../shared/ui'
 
 export function PlaceDetailPage() {
+  const [params] = useSearchParams()
+  const name = params.get('name')
+
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
       <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
@@ -20,6 +23,11 @@ export function PlaceDetailPage() {
           <p className="text-sm text-slate-300">
             상세 페이지(추후 선택된 장소의 전체 날씨 정보를 표시).
           </p>
+          {name && (
+            <p className="mt-2 text-sm text-slate-200">
+              선택된 장소: <span className="font-medium">{name}</span>
+            </p>
+          )}
         </Card>
       </div>
     </div>
