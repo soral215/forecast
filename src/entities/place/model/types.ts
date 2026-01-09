@@ -11,3 +11,4 @@ export type PlaceCandidate = {
   sigungu?: string
   dong?: string
 }
+

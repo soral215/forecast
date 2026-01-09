@@ -8,3 +8,4 @@ export async function fetchJson<T>(
   }
   return (await res.json()) as T
 }
+

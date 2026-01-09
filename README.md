@@ -67,3 +67,4 @@ npm run build
 ## 배포
 
 - Vercel 또는 Netlify 권장(환경변수 없이 동작)
+

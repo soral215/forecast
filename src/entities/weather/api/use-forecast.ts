@@ -9,3 +9,4 @@ export function useForecast(lat: number | null, lon: number | null) {
     queryFn: () => fetchForecast({ lat: lat!, lon: lon! }),
   })
 }
+

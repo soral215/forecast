@@ -32,3 +32,4 @@ export async function fetchForecast(params: { lat: number; lon: number }) {
 
   return await fetchJson<OpenMeteoForecastResponse>(url)
 }
+

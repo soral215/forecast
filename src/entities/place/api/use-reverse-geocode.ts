@@ -10,3 +10,4 @@ export function useReverseGeocode(lat: number | null, lon: number | null) {
     staleTime: 1000 * 60 * 60 * 24, // 24h
   })
 }
+

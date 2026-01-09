@@ -31,7 +31,7 @@ export function HomePage() {
         <CurrentLocationWeather onOpenSearch={() => setSearchOpen(true)} />
 
         <FavoritesSection />
-        <SelectedPlaceWeather />
+        {/* <SelectedPlaceWeather /> */}
 
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
