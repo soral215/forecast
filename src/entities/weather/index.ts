@@ -1,2 +1,6 @@
 export { useForecast } from './api/use-forecast'
-export { getNext24hHourlyTemps, getTodayMinMax } from './lib/selectors'
+export {
+  getDailyMinMaxList,
+  getNext24hHourlyTemps,
+  getTodayMinMax,
+} from './lib/selectors'

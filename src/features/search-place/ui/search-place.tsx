@@ -10,6 +10,8 @@ import { Card, Input, Spinner } from '../../../shared/ui'
 
 type Props = {
   onSelect: (place: PlaceCandidate) => void
+  isFavorite?: (place: PlaceCandidate) => boolean
+  onToggleFavorite?: (place: PlaceCandidate) => void
 }
 
 function scoreCandidate(candidate: PlaceCandidate, queryNorm: string) {
@@ -19,7 +21,7 @@ function scoreCandidate(candidate: PlaceCandidate, queryNorm: string) {
   return candidate.depth
 }
 
-export function SearchPlace({ onSelect }: Props) {
+export function SearchPlace({ onSelect, isFavorite, onToggleFavorite }: Props) {
   const [query, setQuery] = useState('')
   const debounced = useDebounce(query, 200)
   const queryNorm = useMemo(() => normalizeDistrictText(debounced), [debounced])
@@ -85,15 +87,29 @@ export function SearchPlace({ onSelect }: Props) {
             <ul className="max-h-72 overflow-auto">
               {results.map((p) => (
                 <li key={p.full}>
-                  <button
-                    className="w-full rounded-xl px-3 py-2 text-left text-sm text-slate-100 hover:bg-slate-800/60"
-                    onClick={() => {
-                      onSelect(p)
-                    }}
-                    type="button"
-                  >
-                    {p.full}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="min-w-0 flex-1 rounded-xl px-3 py-2 text-left text-sm text-slate-100 hover:bg-slate-800/60"
+                      onClick={() => onSelect(p)}
+                      type="button"
+                    >
+                      <span className="truncate">{p.full}</span>
+                    </button>
+                    {onToggleFavorite && (
+                      <button
+                        className="rounded-xl px-2 py-2 text-lg text-slate-300 hover:bg-slate-800/60 hover:text-slate-100"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onToggleFavorite(p)
+                        }}
+                        type="button"
+                        aria-label="즐겨찾기 토글"
+                        title="즐겨찾기"
+                      >
+                        {isFavorite?.(p) ? '★' : '☆'}
+                      </button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

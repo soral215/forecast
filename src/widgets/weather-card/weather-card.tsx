@@ -18,6 +18,7 @@ type Props = {
   lon: number | null
   headerExtra?: React.ReactNode
   onClick?: () => void
+  detailLabel?: string
   empty?: {
     title: string
     description?: string
@@ -39,6 +40,7 @@ export function WeatherCard({
   detailLink,
   defaultExpanded = false,
   onClick,
+  detailLabel = '전체 보기',
 }: Props) {
   const [expanded, setExpanded] = useState(defaultExpanded)
   const forecast = useForecast(lat, lon)
@@ -114,7 +116,7 @@ export function WeatherCard({
               to={detailLink}
               onClick={(e) => e.stopPropagation()}
             >
-              상세
+              {detailLabel}
             </Link>
           )}
           <Button

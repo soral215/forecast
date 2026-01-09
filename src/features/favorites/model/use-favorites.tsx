@@ -1,38 +1,28 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import {
-  loadFavorites,
-  saveFavorites,
-} from '../../../entities/place/lib/favorites-storage'
 import { type FavoritePlace } from '../../../entities/place/model/favorite-place'
+import { favoritesActions, useFavoritesStore } from './favorites-store'
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<FavoritePlace[]>(() =>
-    loadFavorites(),
+  const favorites = useFavoritesStore()
+  const actions = useMemo(() => favoritesActions(), [])
+
+  const isFavorite = useCallback(
+    (id: string) => actions.isFavorite(id),
+    [actions],
   )
-
-  useEffect(() => {
-    saveFavorites(favorites)
-  }, [favorites])
-
-  const ids = useMemo(() => new Set(favorites.map((f) => f.id)), [favorites])
-  const isFavorite = useCallback((id: string) => ids.has(id), [ids])
-
-  const addFavorite = useCallback((place: FavoritePlace) => {
-    setFavorites((prev) => {
-      if (prev.some((p) => p.id === place.id)) return prev
-      if (prev.length >= 6) return prev
-      return [...prev, place]
-    })
-  }, [])
-
-  const removeFavorite = useCallback((id: string) => {
-    setFavorites((prev) => prev.filter((p) => p.id !== id))
-  }, [])
-
-  const renameFavorite = useCallback((id: string, alias: string) => {
-    setFavorites((prev) => prev.map((p) => (p.id === id ? { ...p, alias } : p)))
-  }, [])
+  const addFavorite = useCallback(
+    (p: FavoritePlace) => actions.add(p),
+    [actions],
+  )
+  const removeFavorite = useCallback(
+    (id: string) => actions.remove(id),
+    [actions],
+  )
+  const renameFavorite = useCallback(
+    (id: string, alias: string) => actions.rename(id, alias),
+    [actions],
+  )
 
   return {
     favorites,
@@ -40,6 +30,6 @@ export function useFavorites() {
     addFavorite,
     removeFavorite,
     renameFavorite,
-    max: 6,
+    max: actions.max,
   }
 }

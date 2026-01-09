@@ -10,6 +10,23 @@ export function getTodayMinMax(data: OpenMeteoForecastResponse) {
   return { min, max }
 }
 
+export function getDailyMinMaxList(data: OpenMeteoForecastResponse, days = 7) {
+  const daily = data.daily
+  if (!daily) return []
+
+  const times = daily.time ?? []
+  const mins = daily.temperature_2m_min ?? []
+  const maxs = daily.temperature_2m_max ?? []
+  const len = Math.min(times.length, mins.length, maxs.length)
+  if (len === 0) return []
+
+  return Array.from({ length: Math.min(days, len) }, (_, i) => ({
+    date: times[i],
+    min: mins[i],
+    max: maxs[i],
+  }))
+}
+
 export function getNext24hHourlyTemps(data: OpenMeteoForecastResponse) {
   const hourly = data.hourly
   if (!hourly) return []

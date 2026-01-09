@@ -87,7 +87,7 @@ export function SelectedPlaceWeather() {
                     selected.full,
                   )}`}
                 >
-                  상세 보기
+                  전체 보기
                 </Link>
               </div>
             )}
