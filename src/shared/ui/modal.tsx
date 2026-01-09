@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect } from 'react'
+import { type PropsWithChildren, useEffect, useId, useRef } from 'react'
 
 import { cn } from '../lib/cn'
 
@@ -10,13 +10,76 @@ type Props = PropsWithChildren<{
 }>
 
 export function Modal({ open, onClose, title, className, children }: Props) {
+  const titleId = useId()
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  const lastFocusedRef = useRef<HTMLElement | null>(null)
+
+  const getFocusable = () => {
+    const root = panelRef.current
+    if (!root) return []
+    const selectors = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(',')
+    return Array.from(root.querySelectorAll<HTMLElement>(selectors)).filter(
+      (el) => !el.hasAttribute('disabled') && el.tabIndex !== -1,
+    )
+  }
+
   useEffect(() => {
     if (!open) return
+
+    // 스크롤 락 + 포커스 복원
+    lastFocusedRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
+    document.body.style.overflow = 'hidden'
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
+      if (e.key !== 'Tab') return
+
+      const focusable = getFocusable()
+      if (focusable.length === 0) {
+        e.preventDefault()
+        panelRef.current?.focus()
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+
+      if (e.shiftKey) {
+        if (active === first || active === panelRef.current) {
+          e.preventDefault()
+          last.focus()
+        }
+        return
+      }
+
+      if (active === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
     window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
+
+    // 열릴 때 포커스 이동
+    const id = window.setTimeout(() => {
+      const focusable = getFocusable()
+      ;(focusable[0] ?? panelRef.current)?.focus()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(id)
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+      lastFocusedRef.current?.focus()
+    }
   }, [open, onClose])
 
   if (!open) return null
@@ -27,6 +90,8 @@ export function Modal({ open, onClose, title, className, children }: Props) {
       onMouseDown={onClose}
       role="dialog"
       aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
+      aria-label={!title ? '모달' : undefined}
     >
       <div
         className={cn(
@@ -34,10 +99,17 @@ export function Modal({ open, onClose, title, className, children }: Props) {
           className,
         )}
         onMouseDown={(e) => e.stopPropagation()}
+        ref={panelRef}
+        tabIndex={-1}
       >
         {title && (
           <div className="border-b border-slate-800 px-5 py-4">
-            <h2 className="text-base font-semibold tracking-tight">{title}</h2>
+            <h2
+              id={titleId}
+              className="text-base font-semibold tracking-tight"
+            >
+              {title}
+            </h2>
           </div>
         )}
         <div className="px-5 py-4">{children}</div>

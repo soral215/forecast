@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { CurrentLocationWeather } from '../../widgets/current-location-weather'
 import { FavoritesSection } from '../../widgets/favorites-section'
-import { SelectedPlaceWeather } from '../../widgets/selected-place-weather'
 import { Button } from '../../shared/ui'
 import { SearchModal } from '../../features/search-modal'
 
@@ -31,7 +30,6 @@ export function HomePage() {
         <CurrentLocationWeather onOpenSearch={() => setSearchOpen(true)} />
 
         <FavoritesSection />
-        {/* <SelectedPlaceWeather /> */}
 
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
