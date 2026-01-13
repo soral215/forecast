@@ -88,7 +88,7 @@ export function Modal({ open, onClose, title, className, children }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center animate-fade-in"
       onMouseDown={onClose}
       role="dialog"
       aria-modal="true"
@@ -98,6 +98,7 @@ export function Modal({ open, onClose, title, className, children }: Props) {
       <div
         className={cn(
           'w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-950 text-slate-50 shadow-xl',
+          'animate-scale-in',
           className,
         )}
         onMouseDown={(e) => e.stopPropagation()}

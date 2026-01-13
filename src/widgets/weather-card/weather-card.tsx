@@ -84,7 +84,10 @@ export function WeatherCard({
 
   return (
     <Card
-      className={cn(expanded ? 'p-6' : 'p-4', onClick && 'cursor-pointer')}
+      className={cn(
+        expanded ? 'p-6' : 'p-4',
+        onClick && 'cursor-pointer hover:border-slate-700 hover:bg-slate-900/60 active:scale-[0.99]',
+      )}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onClick={onClick}

@@ -31,10 +31,10 @@ export function PlaceDetailPage() {
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
       <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
-        <header className="flex items-center justify-between">
+        <header className="animate-on-load animate-fade-in-down flex items-center justify-between">
           <h1 className="text-xl font-semibold tracking-tight">전체 보기</h1>
           <Link
-            className="rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+            className="rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700 transition-colors"
             to="/"
           >
             뒤로
@@ -42,7 +42,7 @@ export function PlaceDetailPage() {
         </header>
 
         {!hasCoords && (
-          <Card>
+          <Card className="animate-on-load animate-fade-in-up animation-delay-100">
             <p className="text-sm text-slate-300">
               선택된 장소가 없습니다. 즐겨찾기 카드 또는 검색 결과에서 장소를
               선택해주세요.
@@ -51,7 +51,7 @@ export function PlaceDetailPage() {
         )}
 
         {hasCoords && (
-          <Card>
+          <Card className="animate-on-load animate-fade-in-up animation-delay-100">
             <h2 className="text-base font-semibold tracking-tight">
               {name ? name : '선택된 장소'}
             </h2>

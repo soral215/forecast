@@ -11,7 +11,7 @@ export function HomePage() {
   return (
     <div className="min-h-full bg-slate-950 text-slate-50">
       <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
-        <header className="flex items-center justify-between">
+        <header className="animate-on-load animate-fade-in-down flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold tracking-tight">날씨</h1>
             <p className="mt-1 text-sm text-slate-400">
@@ -27,9 +27,13 @@ export function HomePage() {
           </Button>
         </header>
 
-        <CurrentLocationWeather onOpenSearch={() => setSearchOpen(true)} />
+        <div className="animate-on-load animate-fade-in-up animation-delay-100">
+          <CurrentLocationWeather onOpenSearch={() => setSearchOpen(true)} />
+        </div>
 
-        <FavoritesSection />
+        <div className="animate-on-load animate-fade-in-up animation-delay-200">
+          <FavoritesSection />
+        </div>
 
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
