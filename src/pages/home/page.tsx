@@ -78,7 +78,7 @@ export function HomePage() {
         </div>
 
         <div className="animate-on-load animate-fade-in-up animation-delay-200">
-          <FavoritesSection />
+          <FavoritesSection onOpenSearch={() => setSearchOpen(true)} />
         </div>
 
         <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
