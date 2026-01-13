@@ -2,6 +2,10 @@ export type { PlaceCandidate, PlaceDepth } from './model/types'
 export { loadSearchIndex } from './lib/build-search-index'
 export { normalizeDistrictText } from './lib/normalize-district'
 export { useGeocodePlace } from './api/use-geocode-place'
+export {
+  geocodeKoreaByName,
+  toGeocodingQueries,
+} from './api/open-meteo-geocoding'
 export { formatKoreanPlaceName } from './api/reverse-geocode'
 export { useReverseGeocode } from './api/use-reverse-geocode'
 export type { FavoritePlace } from './model/favorite-place'

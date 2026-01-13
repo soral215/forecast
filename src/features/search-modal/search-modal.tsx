@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { type PlaceCandidate, useGeocodePlace } from '../../entities/place'
+import {
+  geocodeKoreaByName,
+  type PlaceCandidate,
+  toGeocodingQueries,
+  useGeocodePlace,
+} from '../../entities/place'
 import {
   getTodayMinMax,
   getWeatherLabel,
@@ -34,6 +39,8 @@ export function SearchModal({ open, onClose }: Props) {
     [forecast.data],
   )
 
+  const [loadingFavorite, setLoadingFavorite] = useState<string | null>(null)
+
   const isFavoriteByFullName = (full: string) =>
     fav.favorites.some((f) => f.fullName === full)
 
@@ -43,8 +50,34 @@ export function SearchModal({ open, onClose }: Props) {
       fav.removeFavorite(existing.id)
       return
     }
-    // 즐겨찾기 추가는 프리뷰에서만 확정(좌표 필요)하므로 여기서는 선택만 유도
-    setSelected(c)
+
+    // 즐겨찾기 최대 개수 체크
+    if (fav.favorites.length >= fav.max) return
+
+    // geocoding으로 좌표 가져오기
+    setLoadingFavorite(c.full)
+    try {
+      const queries = toGeocodingQueries(c.full)
+      let result = null
+      for (const q of queries) {
+        const results = await geocodeKoreaByName(q)
+        if (results.length > 0) {
+          result = results[0]
+          break
+        }
+      }
+      if (result) {
+        fav.addFavorite({
+          id: `${result.latitude},${result.longitude}`,
+          fullName: c.full,
+          alias: c.full,
+          lat: result.latitude,
+          lon: result.longitude,
+        })
+      }
+    } finally {
+      setLoadingFavorite(null)
+    }
   }
 
   const previewFav =
@@ -70,6 +103,8 @@ export function SearchModal({ open, onClose }: Props) {
         <SearchPlace
           onSelect={(p) => setSelected(p)}
           isFavorite={(p) => isFavoriteByFullName(p.full)}
+          isLoading={(p) => loadingFavorite === p.full}
+          canAddMore={canAddMore}
           onToggleFavorite={(p) => {
             void toggleFavoriteByCandidate(p)
           }}
