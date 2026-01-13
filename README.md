@@ -1,9 +1,11 @@
-# realteeth (날씨 앱 과제)
+# 날씨 앱 (Weather App)
 
 React + TypeScript로 구현한 **대한민국 주소 검색 기반 날씨 앱**입니다.  
-Open‑Meteo(지오코딩 + 날씨)와 TanStack Query를 사용해 데이터 조회/캐싱을 처리합니다.
+Open-Meteo API(지오코딩 + 날씨)와 TanStack Query를 사용해 데이터 조회/캐싱을 처리합니다.
 
-## 프로젝트 실행 방법
+![Preview](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple)
+
+## 🚀 프로젝트 실행 방법
 
 ### 요구사항
 
@@ -19,53 +21,125 @@ npm run dev
 ### 빌드/검증
 
 ```bash
-npm run format
-npm run lint
-npm run build
+npm run format   # 코드 포맷팅
+npm run lint     # 린트 검사
+npm run build    # 프로덕션 빌드
 ```
 
-## 구현한 기능
+## ✨ 주요 기능
 
-- **현재 위치 날씨**
-  - 앱 첫 진입 시 브라우저 위치 권한을 요청하고, 현재 위치의 **현재 기온 + 오늘 최저/최고**를 표시
-  - 권한 거부/오류 시 안내 문구 및 재시도 버튼 제공
-- **장소 검색(대한민국 한정)**
-  - 제공된 `korea_districts.json`을 기반으로 **시/군/구/동** 검색 자동완성(최대 20개)
-  - 선택한 문자열을 Open‑Meteo 지오코딩으로 좌표(lat/lon)로 변환
-  - 결과가 없으면 **“해당 장소의 정보가 제공되지 않습니다.”** 노출
-- **선택 장소 미리보기(검색 모달)**
-  - 선택한 장소의 **현재 기온 / 오늘 최저·최고 / 시간대별(다음 24시간) 기온**을 카드에서 확장해 확인
-  - 즐겨찾기 여부(★/☆)를 검색 목록에서 바로 확인/토글
-- **즐겨찾기(최대 6개)**
-  - 추가/삭제 가능, localStorage에 저장
-  - 즐겨찾기 카드에 **현재 날씨 + 오늘 최저/최고** 표시
-  - 카드에서 “전체 보기”로 상세 화면 이동
-  - 즐겨찾기 별칭(이름) 수정 가능
-- **상세 페이지**
-  - `/place?lat=...&lon=...` 기반으로 **현재/최저/최고/시간대별(24시간) + 일별 최저/최고(7일)** 표시
+### 🌤️ 현재 위치 날씨
+- 브라우저 위치 권한 요청 후 **현재 기온 + 오늘 최저/최고** 표시
+- **날씨 아이콘** 및 **날씨 상태**(맑음, 흐림, 비, 눈 등) 표시
+- 권한 거부/오류 시 안내 문구 및 재시도 버튼 제공
+- 카드 클릭 시 상세 페이지로 이동
 
-## 기술적 의사결정 및 이유
+### 🔍 장소 검색
+- `korea_districts.json` 기반 **시/도/구/동** 자동완성 검색 (최대 20개)
+- 검색 결과에서 **별표(☆) 클릭으로 즐겨찾기 바로 추가**
+- 선택한 장소의 날씨 미리보기 제공
+- 모달 상단 고정으로 안정적인 UX
 
-- **Open‑Meteo 채택**
-  - API Key 없이 동작해 배포/리뷰 재현성이 높음
-  - 현재/시간대별/일 최저·최고를 필요한 형태로 제공
-  - 지오코딩 API를 함께 제공해 `korea_districts.json`(문자열) → 좌표 변환 흐름이 단순
-- **TanStack Query**
-  - 서버 상태(지오코딩/날씨)를 캐싱/로딩/에러 처리까지 표준화해 UI 구현 복잡도를 낮춤
-- **검색 데이터 로딩 방식**
-  - `korea_districts.json`은 용량이 커서 번들에 직접 포함하지 않고 `?url`로 **정적 asset 로드** 후 인덱싱(초기 로딩/번들 크기 개선)
-- **FSD(Feature Sliced Design)**
-  - `entities`(place/weather), `features`(search), `widgets`(current-location, favorites) 중심으로 책임 분리
+### ⭐ 즐겨찾기 (최대 6개)
+- localStorage 기반 데이터 저장
+- 즐겨찾기 카드에 **현재 날씨 + 오늘 최저/최고** 표시
+- **별칭(이름) 수정** 가능
+- 즐겨찾기 없을 때 검색 유도 UI 제공
+- 상세 페이지에서도 즐겨찾기 추가/삭제 가능
 
-## 사용한 기술 스택
+### 📊 상세 페이지
+- **현재 기온** + 날씨 아이콘
+- **오늘 최저/최고** 온도
+- **시간대별 기온** (다음 24시간)
+- **일별 최저/최고** (7일 예보)
 
-- React, TypeScript, Vite
-- Tailwind CSS
-- TanStack Query
-- React Router
-- ESLint, Prettier
+## 🎨 UI/UX 특징
 
-## 배포
+### 동적 배경
+- 날씨 상태(맑음, 흐림, 비, 눈 등)에 따른 **그라디언트 배경**
+- 낮/밤 구분으로 시간대에 맞는 분위기 연출
+- 부드러운 fade-in 전환 효과 (2초)
 
-- 배포 URL: [forecast-chi-tawny.vercel.app](https://forecast-chi-tawny.vercel.app/)
-- Vercel 또는 Netlify로 배포 가능(환경변수 없이 동작)
+### 애니메이션
+- 페이지 진입 시 **staggered fade-in** 애니메이션
+- 카드 hover/active 상태 피드백
+- 버튼 클릭 시 scale 효과
+
+### Glassmorphism 카드
+- 반투명 배경 + backdrop-blur 효과
+- 배경과 조화로운 border 처리
+
+### 스켈레톤 로딩
+- 날씨 데이터 로딩 중 스켈레톤 UI 표시
+- 로딩 상태에서도 일관된 레이아웃 유지
+
+### 반응형 디자인
+- 모바일: 모달 하단 정렬, 4열 시간대별 그리드
+- 데스크톱: 모달 상단 정렬, 8열 시간대별 그리드
+
+## 🛠️ 기술 스택
+
+| 분류 | 기술 |
+|------|------|
+| Framework | React 18, TypeScript 5 |
+| Build Tool | Vite 6 |
+| Styling | Tailwind CSS 4 |
+| Data Fetching | TanStack Query 5 |
+| Routing | React Router 7 |
+| Linting | ESLint, Prettier |
+
+## 📐 아키텍처 (FSD)
+
+```
+src/
+├── app/              # 앱 설정 (providers, router)
+├── pages/            # 페이지 컴포넌트
+│   ├── home/         # 메인 페이지
+│   └── place-detail/ # 상세 페이지
+├── widgets/          # 복합 UI 컴포넌트
+│   ├── current-location-weather/
+│   ├── favorites-grid/
+│   ├── favorites-section/
+│   └── weather-card/
+├── features/         # 기능 단위 모듈
+│   ├── favorites/    # 즐겨찾기 상태 관리
+│   ├── rename-favorite/
+│   ├── search-modal/
+│   └── search-place/
+├── entities/         # 도메인 모델
+│   ├── place/        # 장소 (geocoding, reverse-geocode)
+│   └── weather/      # 날씨 (forecast, icons, themes)
+└── shared/           # 공통 유틸/컴포넌트
+    ├── api/
+    ├── lib/
+    └── ui/
+```
+
+## 🔧 기술적 의사결정
+
+### Open-Meteo API 채택
+- API Key 없이 동작 → 배포/리뷰 재현성 높음
+- 지오코딩 + 날씨 API를 함께 제공
+- WMO 날씨 코드로 아이콘/배경 매핑 용이
+
+### TanStack Query
+- 서버 상태 캐싱/로딩/에러 처리 표준화
+- staleTime 설정으로 불필요한 재요청 방지
+
+### 검색 데이터 로딩
+- `korea_districts.json`을 번들에 포함하지 않고 `?url`로 **정적 asset 로드**
+- 초기 번들 크기 최적화
+
+### 날씨 테마 시스템
+- WMO 코드 기반 날씨 상태 분류
+- `is_day` 플래그로 낮/밤 구분
+- Tailwind 클래스 기반 동적 스타일링
+
+## 🌐 배포
+
+- **배포 URL**: [forecast-chi-tawny.vercel.app](https://forecast-chi-tawny.vercel.app/)
+- Vercel 또는 Netlify로 배포 가능 (환경변수 없이 동작)
+
+## 📝 라이선스
+
+MIT License
