@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useGeolocation } from '../../shared/lib/use-geolocation'
 import { formatKoreanPlaceName, useReverseGeocode } from '../../entities/place'
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export function CurrentLocationWeather({ onOpenSearch }: Props) {
+  const navigate = useNavigate()
   const geoOptions = useMemo(
     () => ({ enableHighAccuracy: false, timeout: 8000 }),
     [],
@@ -50,6 +52,12 @@ export function CurrentLocationWeather({ onOpenSearch }: Props) {
         )}`
       : undefined
 
+  const handleClick = () => {
+    if (detailLink) {
+      navigate(detailLink)
+    }
+  }
+
   return (
     <WeatherCard
       title="현재 위치"
@@ -58,9 +66,10 @@ export function CurrentLocationWeather({ onOpenSearch }: Props) {
       lon={lon}
       empty={empty}
       detailLink={detailLink}
+      onClick={detailLink ? handleClick : undefined}
       headerExtra={
         <button
-          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+          className="rounded-lg p-2 opacity-70 transition-colors hover:bg-white/20 hover:opacity-100"
           onClick={geo.request}
           aria-label="새로고침"
           title="새로고침"

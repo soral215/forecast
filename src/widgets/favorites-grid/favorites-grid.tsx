@@ -20,7 +20,7 @@ const delayClasses = [
 export function FavoritesGrid({ favorites, onRename, onRemove }: Props) {
   if (favorites.length === 0) {
     return (
-      <p className="text-sm text-slate-400 animate-fade-in">
+      <p className="text-sm opacity-70 animate-fade-in">
         즐겨찾기가 없습니다. (최대 6개)
       </p>
     )

@@ -58,7 +58,7 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+              className="rounded-lg p-2 opacity-70 transition-colors hover:bg-white/20 hover:opacity-100"
               onClick={() => setIsEditing(true)}
               aria-label="이름 수정"
               title="이름 수정"
@@ -68,7 +68,7 @@ export function FavoriteCard({ place, onRename, onRemove }: Props) {
               </svg>
             </button>
             <button
-              className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-rose-900/50 hover:text-rose-300"
+              className="rounded-lg p-2 opacity-70 transition-colors hover:bg-rose-500/30 hover:opacity-100"
               onClick={() => onRemove(place.id)}
               aria-label="삭제"
               title="삭제"

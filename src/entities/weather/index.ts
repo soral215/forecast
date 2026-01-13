@@ -5,3 +5,4 @@ export {
   getTodayMinMax,
 } from './lib/selectors'
 export { WeatherIcon, getWeatherLabel } from './lib/weather-icon'
+export { getWeatherTheme, getDefaultTheme, type WeatherTheme } from './lib/weather-background'

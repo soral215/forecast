@@ -60,7 +60,7 @@ export function WeatherCard({
               {empty?.title ?? title}
             </h2>
             {empty?.description && (
-              <p className="mt-1 text-sm text-slate-400">{empty.description}</p>
+              <p className="mt-1 text-sm opacity-70">{empty.description}</p>
             )}
           </div>
         </div>
@@ -86,7 +86,7 @@ export function WeatherCard({
     <Card
       className={cn(
         'p-4',
-        onClick && 'cursor-pointer hover:border-slate-700 hover:bg-slate-900/60 active:scale-[0.99]',
+        onClick && 'cursor-pointer hover:bg-white/30 active:scale-[0.99]',
       )}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -108,7 +108,7 @@ export function WeatherCard({
           {subtitleNode
             ? subtitleNode
             : subtitle && subtitle !== title && (
-                <p className="mt-1 truncate text-sm text-slate-500">
+                <p className="mt-1 truncate text-sm opacity-60">
                   {subtitle}
                 </p>
               )}
@@ -117,7 +117,7 @@ export function WeatherCard({
           {headerExtra}
           {detailLink && (
             <Link
-              className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+              className="rounded-lg p-2 opacity-70 transition-colors hover:bg-white/20 hover:opacity-100"
               to={detailLink}
               onClick={(e) => e.stopPropagation()}
               aria-label={detailLabel}
@@ -138,7 +138,7 @@ export function WeatherCard({
       )}
 
       {forecast.isError && (
-        <p className="mt-3 text-sm text-rose-300">
+        <p className="mt-3 text-sm text-rose-200">
           해당 장소의 정보가 제공되지 않습니다.
         </p>
       )}
@@ -154,22 +154,22 @@ export function WeatherCard({
                 size="lg"
               />
               <div>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs opacity-70">
                   {getWeatherLabel(forecast.data.current?.weather_code ?? 0)}
                 </p>
-                <p className="text-2xl font-bold tracking-tight text-slate-50">
+                <p className="text-2xl font-bold tracking-tight">
                   {forecast.data.current?.temperature_2m ?? '-'}
-                  <span className="text-lg font-normal text-slate-400">℃</span>
+                  <span className="text-lg font-normal opacity-60">℃</span>
                 </p>
               </div>
             </div>
             {todayMinMax && (
-              <div className="rounded-xl bg-slate-800/50 px-4 py-2">
-                <p className="text-xs text-slate-400">오늘</p>
+              <div className="rounded-xl bg-black/10 px-4 py-2">
+                <p className="text-xs opacity-70">오늘</p>
                 <p className="text-sm">
-                  <span className="font-semibold text-blue-300">{todayMinMax.min}℃</span>
-                  <span className="mx-1.5 text-slate-600">/</span>
-                  <span className="font-semibold text-rose-300">{todayMinMax.max}℃</span>
+                  <span className="font-semibold text-blue-200">{todayMinMax.min}℃</span>
+                  <span className="mx-1.5 opacity-40">/</span>
+                  <span className="font-semibold text-rose-200">{todayMinMax.max}℃</span>
                 </p>
               </div>
             )}
@@ -187,13 +187,13 @@ export function WeatherCard({
                 {getNext24hHourlyTemps(forecast.data).map((x) => (
                   <li
                     key={x.time}
-                    className="flex flex-col items-center gap-1 rounded-xl border border-slate-800 bg-slate-950/30 px-2 py-3"
+                    className="flex flex-col items-center gap-1 rounded-xl border border-white/20 bg-black/10 px-2 py-3"
                   >
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs opacity-70">
                       {x.time.slice(11, 16)}
                     </p>
                     <WeatherIcon code={x.weatherCode} size="sm" />
-                    <p className="text-sm font-semibold text-slate-100">
+                    <p className="text-sm font-semibold">
                       {x.temp}℃
                     </p>
                   </li>
@@ -206,7 +206,7 @@ export function WeatherCard({
           <button
             type="button"
             className={cn(
-              'group -mx-4 -mb-4 flex w-[calc(100%+2rem)] items-center justify-center gap-2 rounded-b-2xl border-t border-slate-800 py-3 text-sm text-slate-400 transition-all hover:bg-slate-800/50 hover:text-slate-200',
+              'group -mx-4 -mb-4 flex w-[calc(100%+2rem)] items-center justify-center gap-2 rounded-b-2xl border-t border-white/20 py-3 text-sm opacity-70 transition-all hover:bg-white/10 hover:opacity-100',
               expanded ? 'mt-4' : 'mt-4',
             )}
             onClick={(e) => {
