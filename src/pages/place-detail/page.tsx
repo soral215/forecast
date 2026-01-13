@@ -4,7 +4,9 @@ import {
   getDailyMinMaxList,
   getNext24hHourlyTemps,
   getTodayMinMax,
+  getWeatherLabel,
   useForecast,
+  WeatherIcon,
 } from '../../entities/weather'
 import { Card } from '../../shared/ui'
 
@@ -71,19 +73,31 @@ export function PlaceDetailPage() {
 
             {forecast.isSuccess && (
               <>
-                <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-200">
-                  <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-                    현재 기온:{' '}
-                    <span className="font-semibold">
-                      {forecast.data.current?.temperature_2m ?? '-'}℃
-                    </span>
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-200">
+                  {/* 날씨 아이콘 + 현재 상태 */}
+                  <div className="flex items-center gap-3 rounded-xl bg-slate-950/40 px-4 py-3">
+                    <WeatherIcon
+                      code={forecast.data.current?.weather_code ?? 0}
+                      isDay={forecast.data.current?.is_day === 1}
+                      size="lg"
+                    />
+                    <div>
+                      <p className="text-sm text-slate-400">
+                        {getWeatherLabel(forecast.data.current?.weather_code ?? 0)}
+                      </p>
+                      <p className="text-2xl font-semibold">
+                        {forecast.data.current?.temperature_2m ?? '-'}℃
+                      </p>
+                    </div>
                   </div>
                   {todayMinMax && (
-                    <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-                      오늘:{' '}
-                      <span className="font-semibold">{todayMinMax.min}℃</span>{' '}
-                      /{' '}
-                      <span className="font-semibold">{todayMinMax.max}℃</span>
+                    <div className="rounded-xl bg-slate-950/40 px-4 py-3">
+                      <p className="text-xs text-slate-400">오늘</p>
+                      <p className="text-lg">
+                        <span className="font-semibold text-blue-300">{todayMinMax.min}℃</span>
+                        <span className="mx-1 text-slate-500">/</span>
+                        <span className="font-semibold text-rose-300">{todayMinMax.max}℃</span>
+                      </p>
                     </div>
                   )}
                 </div>
@@ -92,15 +106,16 @@ export function PlaceDetailPage() {
                   <p className="text-sm text-slate-300">
                     시간대별 기온(다음 24시간)
                   </p>
-                  <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  <ul className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
                     {getNext24hHourlyTemps(forecast.data).map((x) => (
                       <li
                         key={x.time}
-                        className="rounded-xl border border-slate-800 bg-slate-950/30 px-3 py-2"
+                        className="flex flex-col items-center gap-1 rounded-xl border border-slate-800 bg-slate-950/30 px-2 py-3"
                       >
                         <p className="text-xs text-slate-400">
                           {x.time.slice(11, 16)}
                         </p>
+                        <WeatherIcon code={x.weatherCode} size="sm" />
                         <p className="text-sm font-semibold text-slate-100">
                           {x.temp}℃
                         </p>
@@ -117,15 +132,16 @@ export function PlaceDetailPage() {
                         key={d.date}
                         className="flex items-center justify-between gap-4 px-4 py-3"
                       >
+                        <div className="flex items-center gap-3">
+                          <p className="w-12 text-sm text-slate-200">
+                            {d.date.slice(5, 10)}
+                          </p>
+                          <WeatherIcon code={d.weatherCode} size="sm" />
+                        </div>
                         <p className="text-sm text-slate-200">
-                          {d.date.slice(5, 10)}
-                        </p>
-                        <p className="text-sm text-slate-200">
-                          <span className="text-slate-400">최저</span>{' '}
-                          <span className="font-semibold">{d.min}℃</span>
-                          <span className="mx-2 text-slate-700">/</span>
-                          <span className="text-slate-400">최고</span>{' '}
-                          <span className="font-semibold">{d.max}℃</span>
+                          <span className="font-semibold text-blue-300">{d.min}℃</span>
+                          <span className="mx-2 text-slate-600">/</span>
+                          <span className="font-semibold text-rose-300">{d.max}℃</span>
                         </p>
                       </li>
                     ))}

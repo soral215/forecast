@@ -52,4 +52,3 @@ export function RenameFavoriteInline({
     </div>
   )
 }
-

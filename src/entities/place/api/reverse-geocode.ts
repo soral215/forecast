@@ -39,4 +39,3 @@ export function formatKoreanPlaceName(data: ReverseGeocodeResponse) {
   if (parts.length > 0) return parts.join(' ')
   return undefined
 }
-

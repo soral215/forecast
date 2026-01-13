@@ -25,4 +25,3 @@ export function loadFavorites(): FavoritePlace[] {
 export function saveFavorites(list: FavoritePlace[]) {
   writeJson(KEY, list)
 }
-

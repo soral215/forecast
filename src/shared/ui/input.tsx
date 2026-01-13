@@ -20,4 +20,3 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
     />
   )
 })
-

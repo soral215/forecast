@@ -10,4 +10,3 @@ export function useDebounce<T>(value: T, delayMs: number) {
 
   return debounced
 }
-

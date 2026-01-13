@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom'
 import {
   getNext24hHourlyTemps,
   getTodayMinMax,
+  getWeatherLabel,
   useForecast,
+  WeatherIcon,
 } from '../../entities/weather'
 import { Button, Card, Spinner } from '../../shared/ui'
 import { cn } from '../../shared/lib/cn'
@@ -147,17 +149,31 @@ export function WeatherCard({
 
       {forecast.isSuccess && (
         <>
-          <div className="mt-3 flex flex-wrap gap-2 text-sm text-slate-200">
-            <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-              현재:{' '}
-              <span className="font-semibold">
-                {forecast.data.current?.temperature_2m ?? '-'}℃
-              </span>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-200">
+            {/* 날씨 아이콘 + 현재 상태 */}
+            <div className="flex items-center gap-2 rounded-xl bg-slate-950/40 px-3 py-2">
+              <WeatherIcon
+                code={forecast.data.current?.weather_code ?? 0}
+                isDay={forecast.data.current?.is_day === 1}
+                size="md"
+              />
+              <div>
+                <p className="text-xs text-slate-400">
+                  {getWeatherLabel(forecast.data.current?.weather_code ?? 0)}
+                </p>
+                <p className="font-semibold">
+                  {forecast.data.current?.temperature_2m ?? '-'}℃
+                </p>
+              </div>
             </div>
             {todayMinMax && (
               <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-                오늘: <span className="font-semibold">{todayMinMax.min}℃</span>{' '}
-                / <span className="font-semibold">{todayMinMax.max}℃</span>
+                <p className="text-xs text-slate-400">오늘</p>
+                <p>
+                  <span className="font-semibold text-blue-300">{todayMinMax.min}℃</span>
+                  <span className="mx-1 text-slate-500">/</span>
+                  <span className="font-semibold text-rose-300">{todayMinMax.max}℃</span>
+                </p>
               </div>
             )}
           </div>
@@ -167,15 +183,16 @@ export function WeatherCard({
               <p className="text-sm text-slate-300">
                 시간대별 기온(다음 24시간)
               </p>
-              <ul className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <ul className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
                 {getNext24hHourlyTemps(forecast.data).map((x) => (
                   <li
                     key={x.time}
-                    className="rounded-xl border border-slate-800 bg-slate-950/30 px-3 py-2"
+                    className="flex flex-col items-center gap-1 rounded-xl border border-slate-800 bg-slate-950/30 px-2 py-3"
                   >
                     <p className="text-xs text-slate-400">
                       {x.time.slice(11, 16)}
                     </p>
+                    <WeatherIcon code={x.weatherCode} size="sm" />
                     <p className="text-sm font-semibold text-slate-100">
                       {x.temp}℃
                     </p>

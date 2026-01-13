@@ -35,7 +35,9 @@ export function Modal({ open, onClose, title, className, children }: Props) {
 
     // 스크롤 락 + 포커스 복원
     lastFocusedRef.current =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null
     document.body.style.overflow = 'hidden'
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -104,10 +106,7 @@ export function Modal({ open, onClose, title, className, children }: Props) {
       >
         {title && (
           <div className="border-b border-slate-800 px-5 py-4">
-            <h2
-              id={titleId}
-              className="text-base font-semibold tracking-tight"
-            >
+            <h2 id={titleId} className="text-base font-semibold tracking-tight">
               {title}
             </h2>
           </div>
@@ -117,4 +116,3 @@ export function Modal({ open, onClose, title, className, children }: Props) {
     </div>
   )
 }
-

@@ -5,4 +5,3 @@ export type FavoritePlace = {
   lat: number
   lon: number
 }
-

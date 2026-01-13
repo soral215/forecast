@@ -2,7 +2,12 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { type PlaceCandidate, useGeocodePlace } from '../../entities/place'
-import { getTodayMinMax, useForecast } from '../../entities/weather'
+import {
+  getTodayMinMax,
+  getWeatherLabel,
+  useForecast,
+  WeatherIcon,
+} from '../../entities/weather'
 import { useFavorites } from '../favorites'
 import { SearchPlace } from '../search-place'
 import { Button, Modal } from '../../shared/ui'
@@ -103,18 +108,31 @@ export function SearchModal({ open, onClose }: Props) {
 
           {first && (
             <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
-              <div className="flex flex-wrap gap-2 text-sm text-slate-200">
-                <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-                  현재:{' '}
-                  <span className="font-semibold">
-                    {forecast.data?.current?.temperature_2m ?? '-'}℃
-                  </span>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-200">
+                {/* 날씨 아이콘 + 현재 상태 */}
+                <div className="flex items-center gap-2 rounded-xl bg-slate-950/40 px-3 py-2">
+                  <WeatherIcon
+                    code={forecast.data?.current?.weather_code ?? 0}
+                    isDay={forecast.data?.current?.is_day === 1}
+                    size="md"
+                  />
+                  <div>
+                    <p className="text-xs text-slate-400">
+                      {getWeatherLabel(forecast.data?.current?.weather_code ?? 0)}
+                    </p>
+                    <p className="font-semibold">
+                      {forecast.data?.current?.temperature_2m ?? '-'}℃
+                    </p>
+                  </div>
                 </div>
                 {todayMinMax && (
                   <div className="rounded-xl bg-slate-950/40 px-3 py-2">
-                    오늘:{' '}
-                    <span className="font-semibold">{todayMinMax.min}℃</span> /{' '}
-                    <span className="font-semibold">{todayMinMax.max}℃</span>
+                    <p className="text-xs text-slate-400">오늘</p>
+                    <p>
+                      <span className="font-semibold text-blue-300">{todayMinMax.min}℃</span>
+                      <span className="mx-1 text-slate-500">/</span>
+                      <span className="font-semibold text-rose-300">{todayMinMax.max}℃</span>
+                    </p>
                   </div>
                 )}
               </div>

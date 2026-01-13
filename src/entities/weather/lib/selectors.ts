@@ -17,6 +17,7 @@ export function getDailyMinMaxList(data: OpenMeteoForecastResponse, days = 7) {
   const times = daily.time ?? []
   const mins = daily.temperature_2m_min ?? []
   const maxs = daily.temperature_2m_max ?? []
+  const codes = daily.weather_code ?? []
   const len = Math.min(times.length, mins.length, maxs.length)
   if (len === 0) return []
 
@@ -24,6 +25,7 @@ export function getDailyMinMaxList(data: OpenMeteoForecastResponse, days = 7) {
     date: times[i],
     min: mins[i],
     max: maxs[i],
+    weatherCode: codes[i] ?? 0,
   }))
 }
 
@@ -33,6 +35,7 @@ export function getNext24hHourlyTemps(data: OpenMeteoForecastResponse) {
 
   const times = hourly.time ?? []
   const temps = hourly.temperature_2m ?? []
+  const codes = hourly.weather_code ?? []
   const len = Math.min(times.length, temps.length)
   if (len === 0) return []
 
@@ -41,6 +44,6 @@ export function getNext24hHourlyTemps(data: OpenMeteoForecastResponse) {
 
   return Array.from({ length: Math.min(24, len - startIdx) }, (_, i) => {
     const idx = startIdx + i
-    return { time: times[idx], temp: temps[idx] }
+    return { time: times[idx], temp: temps[idx], weatherCode: codes[idx] ?? 0 }
   })
 }

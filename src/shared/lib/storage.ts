@@ -11,4 +11,3 @@ export function readJson<T>(key: string): T | null {
 export function writeJson<T>(key: string, value: T) {
   localStorage.setItem(key, JSON.stringify(value))
 }
-

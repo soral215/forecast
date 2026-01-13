@@ -4,3 +4,4 @@ export {
   getNext24hHourlyTemps,
   getTodayMinMax,
 } from './lib/selectors'
+export { WeatherIcon, getWeatherLabel } from './lib/weather-icon'

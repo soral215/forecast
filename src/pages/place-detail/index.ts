@@ -1,2 +1,1 @@
 export { PlaceDetailPage } from './page'
-
