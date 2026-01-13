@@ -10,7 +10,7 @@ export function Skeleton({ className, variant = 'text', ...props }: Props) {
   return (
     <div
       className={cn(
-        'animate-pulse bg-slate-800',
+        'animate-pulse bg-white/20',
         variant === 'text' && 'h-4 rounded',
         variant === 'circular' && 'rounded-full',
         variant === 'rectangular' && 'rounded-xl',
@@ -42,7 +42,7 @@ export function WeatherCardSkeleton() {
       </div>
 
       {/* 하단 토글 영역 스켈레톤 */}
-      <div className="border-t border-slate-800 pt-3">
+      <div className="border-t border-white/20 pt-3">
         <Skeleton className="mx-auto h-4 w-28" />
       </div>
     </div>

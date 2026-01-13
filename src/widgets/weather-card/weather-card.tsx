@@ -53,7 +53,7 @@ export function WeatherCard({
 
   if (lat === null || lon === null) {
     return (
-      <Card>
+      <Card className="min-h-[180px] p-4">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-base font-semibold tracking-tight">
@@ -63,6 +63,7 @@ export function WeatherCard({
               <p className="mt-1 text-sm opacity-70">{empty.description}</p>
             )}
           </div>
+          {headerExtra}
         </div>
         {empty?.actions && empty.actions.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
@@ -85,7 +86,7 @@ export function WeatherCard({
   return (
     <Card
       className={cn(
-        'p-4',
+        'min-h-[180px] p-4',
         onClick && 'cursor-pointer hover:bg-white/30 active:scale-[0.99]',
       )}
       role={onClick ? 'button' : undefined}
