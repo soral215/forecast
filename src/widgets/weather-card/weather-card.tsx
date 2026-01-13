@@ -8,7 +8,7 @@ import {
   useForecast,
   WeatherIcon,
 } from '../../entities/weather'
-import { Button, Card, Spinner } from '../../shared/ui'
+import { Button, Card, WeatherCardSkeleton } from '../../shared/ui'
 import { cn } from '../../shared/lib/cn'
 
 type Props = {
@@ -132,9 +132,8 @@ export function WeatherCard({
       </div>
 
       {forecast.isLoading && (
-        <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
-          <Spinner size="sm" />
-          불러오는 중...
+        <div className="mt-4">
+          <WeatherCardSkeleton />
         </div>
       )}
 
@@ -176,30 +175,6 @@ export function WeatherCard({
             )}
           </div>
 
-          {/* 시간대별 보기 토글 영역 */}
-          <button
-            type="button"
-            className="mt-4 flex w-full items-center justify-center gap-2 border-t border-slate-800 pt-3 text-sm text-slate-400 transition-colors hover:text-slate-200"
-            onClick={(e) => {
-              e.stopPropagation()
-              setExpanded((v) => !v)
-            }}
-          >
-            <span>{expanded ? '시간대별 접기' : '시간대별 보기'}</span>
-            <svg
-              className={cn(
-                'h-4 w-4 transition-transform duration-200',
-                expanded && 'rotate-180',
-              )}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
           {/* 펼쳐진 시간대별 기온 */}
           <div
             className={cn(
@@ -226,6 +201,33 @@ export function WeatherCard({
               </ul>
             </div>
           </div>
+
+          {/* 시간대별 보기 토글 영역 */}
+          <button
+            type="button"
+            className={cn(
+              'group -mx-4 -mb-4 flex w-[calc(100%+2rem)] items-center justify-center gap-2 rounded-b-2xl border-t border-slate-800 py-3 text-sm text-slate-400 transition-all hover:bg-slate-800/50 hover:text-slate-200',
+              expanded ? 'mt-4' : 'mt-4',
+            )}
+            onClick={(e) => {
+              e.stopPropagation()
+              setExpanded((v) => !v)
+            }}
+          >
+            <span>{expanded ? '시간대별 접기' : '시간대별 보기'}</span>
+            <svg
+              className={cn(
+                'h-4 w-4 transition-transform duration-200 group-hover:scale-110',
+                expanded && 'rotate-180',
+              )}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </>
       )}
     </Card>

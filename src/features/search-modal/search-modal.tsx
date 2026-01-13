@@ -10,7 +10,7 @@ import {
 } from '../../entities/weather'
 import { useFavorites } from '../favorites'
 import { SearchPlace } from '../search-place'
-import { Button, Modal } from '../../shared/ui'
+import { Button, Modal, WeatherPreviewSkeleton } from '../../shared/ui'
 
 type Props = {
   open: boolean
@@ -92,8 +92,10 @@ export function SearchModal({ open, onClose }: Props) {
             </Button>
           </div>
 
-          {geocode.isLoading && (
-            <p className="text-sm text-slate-400">좌표를 찾는 중...</p>
+          {(geocode.isLoading || forecast.isLoading) && (
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+              <WeatherPreviewSkeleton />
+            </div>
           )}
           {geocode.isError && (
             <p className="text-sm text-rose-300">
@@ -106,7 +108,7 @@ export function SearchModal({ open, onClose }: Props) {
             </p>
           )}
 
-          {first && (
+          {first && forecast.isSuccess && (
             <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
               <div className="flex flex-wrap items-center gap-3 text-sm text-slate-200">
                 {/* 날씨 아이콘 + 현재 상태 */}

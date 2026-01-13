@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 
-import { Button } from '../../shared/ui'
 import { useGeolocation } from '../../shared/lib/use-geolocation'
 import { formatKoreanPlaceName, useReverseGeocode } from '../../entities/place'
 import { WeatherCard } from '../weather-card'
@@ -60,9 +59,16 @@ export function CurrentLocationWeather({ onOpenSearch }: Props) {
       empty={empty}
       detailLink={detailLink}
       headerExtra={
-        <Button variant="secondary" size="sm" onClick={geo.request}>
-          새로고침
-        </Button>
+        <button
+          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+          onClick={geo.request}
+          aria-label="새로고침"
+          title="새로고침"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
       }
     />
   )
