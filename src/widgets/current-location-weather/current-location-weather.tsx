@@ -70,7 +70,10 @@ export function CurrentLocationWeather({ onOpenSearch }: Props) {
       headerExtra={
         <button
           className="rounded-lg p-2 opacity-70 transition-colors hover:bg-white/20 hover:opacity-100"
-          onClick={geo.request}
+          onClick={(e) => {
+            e.stopPropagation()
+            geo.request()
+          }}
           aria-label="새로고침"
           title="새로고침"
         >

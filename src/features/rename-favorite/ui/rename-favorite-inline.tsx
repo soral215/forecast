@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Button, Input } from '../../../shared/ui'
+import { Input } from '../../../shared/ui'
 
 type Props = {
   initialValue: string
@@ -42,13 +42,24 @@ export function RenameFavoriteInline({
           if (e.key === 'Escape') onCancel()
         }}
         placeholder="별칭 입력"
+        className="w-auto min-w-0 flex-1"
       />
-      <Button size="sm" variant="primary" onClick={save}>
-        저장
-      </Button>
-      <Button size="sm" variant="ghost" onClick={onCancel}>
-        취소
-      </Button>
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          onClick={save}
+          className="rounded-lg bg-white/30 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-white/40"
+        >
+          저장
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-lg px-3 py-1.5 text-sm font-medium opacity-70 transition-colors hover:bg-white/20 hover:opacity-100"
+        >
+          취소
+        </button>
+      </div>
     </div>
   )
 }
