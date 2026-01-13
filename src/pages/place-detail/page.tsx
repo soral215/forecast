@@ -11,6 +11,7 @@ import {
   useForecast,
   WeatherIcon,
 } from '../../entities/weather'
+import { useFavorites } from '../../features/favorites'
 import { Card } from '../../shared/ui'
 import { cn } from '../../shared/lib/cn'
 
@@ -31,6 +32,31 @@ export function PlaceDetailPage() {
 
   const forecast = useForecast(hasCoords ? lat : null, hasCoords ? lon : null)
   const todayMinMax = forecast.data ? getTodayMinMax(forecast.data) : null
+
+  // 즐겨찾기 관련
+  const fav = useFavorites()
+  const placeId = hasCoords ? `${lat},${lon}` : ''
+  const isFavorite = fav.isFavorite(placeId) || fav.favorites.some((f) => f.fullName === name)
+  const canAddMore = fav.favorites.length < fav.max
+
+  const handleToggleFavorite = () => {
+    if (isFavorite) {
+      // 즐겨찾기 삭제
+      const existing = fav.favorites.find((f) => f.id === placeId || f.fullName === name)
+      if (existing) {
+        fav.removeFavorite(existing.id)
+      }
+    } else if (canAddMore && hasCoords && name) {
+      // 즐겨찾기 추가
+      fav.addFavorite({
+        id: placeId,
+        fullName: name,
+        alias: name,
+        lat,
+        lon,
+      })
+    }
+  }
 
   const defaultTheme = getDefaultTheme()
   const weatherTheme = useMemo(() => {
@@ -85,12 +111,46 @@ export function PlaceDetailPage() {
 
         {hasCoords && (
           <Card className="animate-on-load animate-fade-in-up animation-delay-100">
-            <h2 className="text-base font-semibold tracking-tight">
-              {name ? name : '선택된 장소'}
-            </h2>
-            <p className="mt-1 text-sm opacity-60">
-              좌표: {lat}, {lon}
-            </p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-base font-semibold tracking-tight">
+                  {name ? name : '선택된 장소'}
+                </h2>
+                <p className="mt-1 text-sm opacity-60">
+                  좌표: {lat}, {lon}
+                </p>
+              </div>
+              {/* 즐겨찾기 버튼 */}
+              <button
+                onClick={handleToggleFavorite}
+                disabled={!isFavorite && !canAddMore}
+                className={cn(
+                  'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
+                  isFavorite
+                    ? 'bg-amber-500/20 text-amber-200 hover:bg-amber-500/30'
+                    : canAddMore
+                      ? 'bg-white/20 hover:bg-white/30'
+                      : 'cursor-not-allowed bg-white/10 opacity-50',
+                )}
+                title={isFavorite ? '즐겨찾기 삭제' : canAddMore ? '즐겨찾기 추가' : `최대 ${fav.max}개까지 추가 가능`}
+              >
+                {isFavorite ? (
+                  <>
+                    <svg className="h-4 w-4 fill-amber-300" viewBox="0 0 24 24">
+                      <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                    </svg>
+                    즐겨찾기됨
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                    </svg>
+                    즐겨찾기
+                  </>
+                )}
+              </button>
+            </div>
 
             {forecast.isLoading && (
               <p className="mt-4 text-sm opacity-70">

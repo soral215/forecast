@@ -84,7 +84,7 @@ export function SearchPlace({ onSelect, isFavorite, onToggleFavorite }: Props) {
               매칭되는 장소가 없습니다.
             </p>
           ) : (
-            <ul className="max-h-72 overflow-auto">
+            <ul className="max-h-72 overflow-auto custom-scrollbar">
               {results.map((p) => (
                 <li key={p.full}>
                   <div className="flex items-center gap-2">
